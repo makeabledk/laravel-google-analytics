@@ -1,5 +1,7 @@
 <?php
 
+namespace Makeable\Analytics;
+
 use Google_Client;
 use Illuminate\Support\ServiceProvider;
 
