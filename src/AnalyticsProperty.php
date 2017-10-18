@@ -1,62 +1,48 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: troels
- * Date: 17/10/2017
- * Time: 14.28
- */
 
 namespace Makeable\Analytics;
-
 
 use Google_Service_Analytics;
 
 class AnalyticsProperty
 {
-    protected $id;
+    use NormalizeParameters;
+
+    protected $account_id;
+    protected $property_id;
     protected $name;
     protected $url;
     protected $created;
+    protected $user;
 
-    public function __construct($propertyData)
+    public function __construct(AnalyticsUser $user, $propertyData)
     {
-        $this->id = $propertyData->getId();
+        $this->user = $user;
+        $this->account_id = $propertyData->getAccountId();
+        $this->property_id = $propertyData->getId();
         $this->name = $propertyData->getName();
         $this->url = $propertyData->getWebsiteUrl();
         $this->created = $propertyData->getCreated();
     }
 
-    public static function all(AnalyticsAccount $account)
+    public static function all(AnalyticsUser $user, $account = null)
     {
-        $analytics = new Google_Service_Analytics($account->getUser()->getClient());
+        $analytics = new Google_Service_Analytics($user->getClient());
 
-        try {
-            $response = $analytics->management_webproperties
-              ->listManagementWebproperties($account->getId());
+        $response = $analytics->management_webproperties
+          ->listManagementWebproperties(static::normalize($account));
 
-        } catch (apiServiceException $e) {
-            throw new \Exception(
-              'There was an Analytics API service error '
-              . $e->getCode() . ':' . $e->getMessage()
-            );
-
-        } catch (apiException $e) {
-            throw new \Exception(
-              'There was a general API error '
-              . $e->getCode() . ':' . $e->getMessage()
-            );
-        }
         return collect($response->getItems())
-          ->map(function ($property) {
-              return new AnalyticsProperty($property);
+          ->map(function ($property) use ($user) {
+              return new AnalyticsProperty($user, $property);
           });
     }
     public function getViews($user, $account)
     {
-        return AnalyticsView::all($this, $user, $account);
+        return AnalyticsView::all($user, $account);
     }
     public function getId()
     {
-        return $this->id;
+        return $this->property_id;
     }
 }

@@ -1,60 +1,40 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: troels
- * Date: 17/10/2017
- * Time: 15.04
- */
 
 namespace Makeable\Analytics;
-
 
 use Google_Service_Analytics;
 
 class AnalyticsView
 {
-    protected $id;
+    use NormalizeParameters;
+
+    protected $view_id;
+    protected $account_id;
+    protected $property_id;
     protected $name;
     protected $type;
     protected $created;
 
-
     public function __construct($viewData)
     {
-        var_dump('<pre>');
-        var_dump($viewData);
-        $this->id = $viewData->getId();
+        $this->view_id = $viewData->getId();
+        $this->account_id = $viewData->getAccountId();
+        $this->property_id = $viewData->getWebPropertyId();
         $this->name = $viewData->getName();
         $this->type = $viewData->getType();
         $this->created = $viewData->getCreated();
     }
 
-    public static function all(AnalyticsProperty $property, AnalyticsUser $user, AnalyticsAccount $account)
+    public static function all(AnalyticsUser $user, $account = null, $property = null)
     {
+            $analytics = new Google_Service_Analytics($user->getClient());
 
-        $analytics = new Google_Service_Analytics($user->getClient());
+        $response = $analytics->management_profiles
+            ->listManagementProfiles(static::normalize($account), static::normalize($property));
 
-        try {
-            $response = $analytics->management_profiles
-             // ->listManagementProfiles($account->getId(), $property->getId());
-              ->listManagementProfiles('~all', '~all');
-
-        } catch (apiServiceException $e) {
-            throw new \Exception(
-              'There was an Analytics API service error '
-              . $e->getCode() . ':' . $e->getMessage()
-            );
-
-        } catch (apiException $e) {
-            throw new \Exception(
-              'There was a general API error '
-              . $e->getCode() . ':' . $e->getMessage()
-            );
-        }
         return collect($response->getItems())
           ->map(function ($view) {
               return new AnalyticsView($view);
           });
-
     }
 }
