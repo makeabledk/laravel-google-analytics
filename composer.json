@@ -1,5 +1,5 @@
 {
-    "name": "makeabledk/analytics",
+    "name": "makeabledk/laravel-google-analytics",
     "description": "Fetches data from users analytics",
     "license": "CC0-1.0",
     "authors": [
