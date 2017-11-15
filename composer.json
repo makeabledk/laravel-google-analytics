@@ -1,0 +1,27 @@
+{
+    "name": "makeabledk/analytics",
+    "description": "Fetches data from users analytics",
+    "license": "CC0-1.0",
+    "authors": [
+        {
+            "name": "Troels Lenda",
+            "email": "troels@makeable.dk"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Makeable\\Analytics\\AnalyticsServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Makeable\\Analytics\\": "src/"
+        }
+    },
+    "require": {
+        "google/apiclient": "^2.2",
+        "illuminate/support": "^5.5"
+    }
+}
