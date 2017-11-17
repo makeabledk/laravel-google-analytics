@@ -2,7 +2,6 @@
 
 namespace Makeable\Analytics;
 
-use Google_Client;
 use Illuminate\Support\ServiceProvider;
 
 class AnalyticsServiceProvider extends ServiceProvider
@@ -23,21 +22,5 @@ class AnalyticsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(AnalyticsClient::class, function () {
-            return tap(new Google_Client, function ($client) {
-                $client->setApplicationName(config('app.name'));
-                $client->setAuthConfig(config('services.google.credentials_file'));
-            });
-        });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [AnalyticsClient::class];
     }
 }

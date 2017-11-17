@@ -3,21 +3,34 @@
 namespace Makeable\Analytics;
 
 use Google_Service_Analytics;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
+use JsonSerializable;
 
-class AnalyticsAccount
+class AnalyticsAccount implements Arrayable, JsonSerializable
 {
-    protected $user;
-    protected $account_id;
-    protected $name;
-    protected $created;
+    use HasAttributes;
 
+    /**
+     * @var
+     */
+    protected $user;
+
+    /**
+     * AnalyticsAccount constructor.
+     * @param $accountData
+     */
     public function __construct($accountData)
     {
-        $this->account_id = $accountData->id;
+        $this->id = $accountData->id;
         $this->name = $accountData->name;
         $this->created = $accountData->created;
     }
 
+    /**
+     * @param AnalyticsUser $user
+     * @return Collection
+     */
     public static function all(AnalyticsUser $user)
     {
         $analytics = new Google_Service_Analytics($user->getClient());
@@ -27,9 +40,5 @@ class AnalyticsAccount
           ->map(function ($account) {
               return new AnalyticsAccount($account);
           });
-    }
-    public function getId()
-    {
-        return $this->account_id;
     }
 }

@@ -2,39 +2,72 @@
 
 namespace Makeable\Analytics;
 
+use AnalyticsWizard\Client;
+use AnalyticsWizard\ReportRequest;
 use Google_Service_Analytics;
+use Google_Service_Analytics_Profile;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
+use JsonSerializable;
 
-class AnalyticsView
+class AnalyticsView implements Arrayable, JsonSerializable
 {
-    use NormalizeParameters;
+    use HasAttributes,
+        NormalizeParameters;
 
-    protected $view_id;
-    protected $account_id;
-    protected $property_id;
-    protected $name;
-    protected $type;
-    protected $created;
+    /**
+     * @var AnalyticsUser
+     */
+    protected $user;
 
-    public function __construct($viewData)
+    /**
+     * AnalyticsView constructor.
+     * @param AnalyticsUser $user
+     * @param $data
+     */
+    public function __construct(AnalyticsUser $user, $data)
     {
-        $this->view_id = $viewData->getId();
-        $this->account_id = $viewData->getAccountId();
-        $this->property_id = $viewData->getWebPropertyId();
-        $this->name = $viewData->getName();
-        $this->type = $viewData->getType();
-        $this->created = $viewData->getCreated();
+        $this->user = $user;
+
+        is_array($data) ? $this->fill($data) : $this->setAttributes($data);
     }
 
+    /**
+     * @param AnalyticsUser $user
+     * @param null $account
+     * @param null $property
+     * @return Collection
+     */
     public static function all(AnalyticsUser $user, $account = null, $property = null)
     {
-            $analytics = new Google_Service_Analytics($user->getClient());
+        $analytics = new Google_Service_Analytics($user->getClient());
 
         $response = $analytics->management_profiles
             ->listManagementProfiles(static::normalize($account), static::normalize($property));
 
         return collect($response->getItems())
-          ->map(function ($view) {
-              return new AnalyticsView($view);
-          });
+            ->map(function ($view) use ($user) {
+                return new AnalyticsView($user, $view);
+            });
+    }
+
+    public function query($callable)
+    {
+        return (new Client($this->user->getClient()))->fetchReport(
+            tap(new ReportRequest($this->id), $callable)->get()
+        );
+    }
+
+    /**
+     * @param Google_Service_Analytics_Profile $data
+     */
+    protected function setAttributes(Google_Service_Analytics_Profile $data)
+    {
+        $this->id = $data->getId();
+        $this->account_id = $data->getAccountId();
+        $this->property_id = $data->getWebPropertyId();
+        $this->name = $data->getName();
+        $this->type = $data->getType();
+        $this->created = $data->getCreated();
     }
 }

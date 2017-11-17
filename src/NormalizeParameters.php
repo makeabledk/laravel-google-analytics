@@ -4,6 +4,10 @@ namespace Makeable\Analytics;
 
 trait NormalizeParameters
 {
+    /**
+     * @param $object
+     * @return string
+     */
     protected static function normalize($object)
     {
         if ($object === null) {
