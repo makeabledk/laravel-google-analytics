@@ -12,13 +12,13 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Makeable\\Analytics\\AnalyticsServiceProvider"
+                "Makeable\\LaravelAnalytics\\AnalyticsServiceProvider"
             ]
         }
     },
     "autoload": {
         "psr-4": {
-            "Makeable\\Analytics\\": "src/"
+            "Makeable\\LaravelAnalytics\\": "src/"
         }
     },
     "require": {

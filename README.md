@@ -7,15 +7,14 @@ Fetches Analytics channel data based on oAuth
 composer require makeabledk/laravel-google-analytics
 ```
 
-Add to your `AppServiceProvider@register` 
+Add the following config to your `config/services.php` 
 ```php
-$this->app->bind(AnalyticsClient::class, function () {
-    return tap(new Google_Client, function ($client) {
-        $client->setApplicationName(config('app.name'));
-        $client->setAuthConfig([
-            'client_id' => config('services.google.oauth_client_id'),
-            'client_secret' => config('services.google.oauth_client_secret'),
-        ]);
-    });
-});
+return [
+
+    // ...
+
+    'google' => [
+        'oauth_client_id' => env('GOOGLE_OAUTH_CLIENT_ID'), // provide your client id
+        'oauth_client_secret' => env('GOOGLE_OAUTH_CLIENT_SECRET'), // provide your client secreT
+    ],
 ```

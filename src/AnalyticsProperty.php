@@ -1,6 +1,6 @@
 <?php
 
-namespace Makeable\Analytics;
+namespace Makeable\LaravelAnalytics;
 
 use Google_Service_Analytics;
 use Illuminate\Contracts\Support\Arrayable;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Makeable\Analytics;
+namespace Makeable\LaravelAnalytics;
 
 trait HasAttributes
 {

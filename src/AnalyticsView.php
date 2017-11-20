@@ -1,6 +1,6 @@
 <?php
 
-namespace Makeable\Analytics;
+namespace Makeable\LaravelAnalytics;
 
 use AnalyticsWizard\Client;
 use AnalyticsWizard\ReportRequest;
@@ -51,6 +51,10 @@ class AnalyticsView implements Arrayable, JsonSerializable
             });
     }
 
+    /**
+     * @param $callable
+     * @return ReportRequest
+     */
     public function query($callable)
     {
         return (new Client($this->user->getClient()))->fetchReport(

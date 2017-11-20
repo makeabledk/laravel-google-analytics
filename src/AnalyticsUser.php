@@ -1,6 +1,6 @@
 <?php
 
-namespace Makeable\Analytics;
+namespace Makeable\LaravelAnalytics;
 
 use Cache;
 use Google_Client;
