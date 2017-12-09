@@ -16,6 +16,7 @@ trait NormalizeParameters
         if (is_object($object) && method_exists($object, 'getId')) {
             return $object->getId();
         }
+
         return $object;
     }
 }
