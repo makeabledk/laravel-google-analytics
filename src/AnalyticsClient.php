@@ -4,5 +4,4 @@ namespace Makeable\LaravelAnalytics;
 
 interface AnalyticsClient
 {
-
 }

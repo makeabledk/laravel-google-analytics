@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 
 class AnalyticsUser
 {
-
     /**
      * @var Google_Client
      */
@@ -20,7 +19,7 @@ class AnalyticsUser
      */
     public static function find($refreshToken)
     {
-        $cacheKey = 'analytics_access_token_' . md5($refreshToken);
+        $cacheKey = 'analytics_access_token_'.md5($refreshToken);
 
         $user = new static;
         $user->client = app(AnalyticsClient::class);
