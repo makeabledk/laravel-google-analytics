@@ -16,6 +16,9 @@
             ]
         }
     },
+    "suggest": {
+        "makeabledk/analytics-wizard": "Required to query views"
+    },
     "autoload": {
         "psr-4": {
             "Makeable\\LaravelAnalytics\\": "src/"
