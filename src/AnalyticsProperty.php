@@ -56,6 +56,6 @@ class AnalyticsProperty implements Arrayable, JsonSerializable
      */
     public function getViews()
     {
-        return AnalyticsView::all($this->user);
+        return AnalyticsView::all($this->user, $this->account_id, $this->id);
     }
 }
